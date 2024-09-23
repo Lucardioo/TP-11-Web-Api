@@ -33,22 +33,7 @@ List<UsuarioRol> usuariosRoles = new List<UsuarioRol>();
 
 //Usuarios
 
-// Lee listado de usuarios
-app.MapGet("/usuario/{idUsuario}", (int idUsuario) =>
-{
-    var usuario = usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
-    if (usuario != null)
-    {
-        return Results.Ok(usuario);
-    }
-    else
-    {
-        return Results.NotFound();
-    }
-})
-.WithTags("Usuario");
-
-// Crea un nuevo usuario en la lista
+// POST - Crea un nuevo usuario en la lista
 app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
 {
     if (string.IsNullOrEmpty(usuario.Nombre) || string.IsNullOrEmpty(usuario.Email) ||
@@ -63,23 +48,28 @@ app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
 })
 .WithTags("Usuario");
 
-// Borra un usuario en la lista
-app.MapDelete("/usuario", ([FromQuery] int idUsuario) =>
+// GET - Ver todos los datos de todos los usuarios
+app.MapGet("/usuarios", () =>
 {
-    var usuarioAEliminar = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == idUsuario);
-    if (usuarioAEliminar != null)
-    {
-        usuarios.Remove(usuarioAEliminar);
-        return Results.Ok(usuarios); // Código 200
-    }
-    else
-    {
-        return Results.NotFound(); // Código 404
-    }
+    return Results.Ok(usuarios); // Devuelve 200 OK con la lista completa de usuarios
 })
 .WithTags("Usuario");
 
-// Actualiza un usuario en la lista
+// GET - Ver el detalle del usuario especificado por el id
+app.MapGet("/usuario/{id}", (int id) =>
+{
+    var usuario = usuarios.FirstOrDefault(u => u.IdUsuario == id);
+    
+    if (usuario == null)
+    {
+        return Results.NotFound(); // Código 404 si no existe el usuario
+    }
+    
+    return Results.Ok(usuario); // Devuelve 200 OK con los detalles del usuario
+})
+.WithTags("Usuario");
+
+// PUT - Modificar el contenido de un usuario
 app.MapPut("/usuario", ([FromQuery] int idUsuario, [FromBody] Usuario usuario) =>
 {
     var usuarioAActualizar = usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
@@ -103,24 +93,27 @@ app.MapPut("/usuario", ([FromQuery] int idUsuario, [FromBody] Usuario usuario) =
 })
 .WithTags("Usuario");
 
+// DELETE - Borrar un usuario especificando un id
+app.MapDelete("/usuario", ([FromQuery] int idUsuario) =>
+{
+    var usuarioAEliminar = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == idUsuario);
+    if (usuarioAEliminar != null)
+    {
+        usuarios.Remove(usuarioAEliminar);
+        return Results.Ok(usuarios); // Código 200
+    }
+    else
+    {
+        return Results.NotFound(); // Código 404
+    }
+})
+.WithTags("Usuario");
 
 
 
 //Roles
 
-// Lee listado de roles
-app.MapGet("/rol/{idRol}", (int idRol) =>
-{
-    var rol = roles.FirstOrDefault(r => r.IdRol == idRol);
-    if (rol == null)
-    {
-        return Results.NotFound(); // Código 404
-    }
-    return Results.Ok(rol); // Código 200 con el rol encontrado
-})
-.WithTags("Rol");
-
-// Crea un nuevo rol en la lista
+// POST - Crea un nuevo rol
 app.MapPost("/rol", ([FromBody] Rol rol) =>
 {
     if (string.IsNullOrEmpty(rol.Nombre))
@@ -135,23 +128,28 @@ app.MapPost("/rol", ([FromBody] Rol rol) =>
 })
 .WithTags("Rol");
 
-// Borra un rol en la lista
-app.MapDelete("/rol", ([FromQuery] int idRol) =>
+// GET - Ver todos los datos de todos los roles
+app.MapGet("/roles", () =>
 {
-    var rolAEliminar = roles.FirstOrDefault(r => r.IdRol == idRol);
-    if (rolAEliminar != null)
-    {
-        roles.Remove(rolAEliminar);
-        return Results.NoContent(); // Código 204
-    }
-    else
-    {
-        return Results.NotFound(); // Código 404
-    }
+    return Results.Ok(roles); // Devuelve 200 OK con la lista completa de roles
 })
 .WithTags("Rol");
 
-// Actualiza un rol en la lista
+// GET - Ver el detalle de un rol especificado por ID
+app.MapGet("/rol/{id}", (int id) =>
+{
+    var rol = roles.FirstOrDefault(r => r.IdRol == id);
+    
+    if (rol == null)
+    {
+        return Results.NotFound(); // Código 404 si no existe el rol
+    }
+    
+    return Results.Ok(rol); // Devuelve 200 OK con los detalles del rol
+})
+.WithTags("Rol");
+
+// PUT - Modificar el contenido de un rol
 app.MapPut("/rol", ([FromQuery] int idRol, [FromBody] Rol rol) =>
 {
     var rolAActualizar = roles.FirstOrDefault(r => r.IdRol == idRol);
@@ -174,6 +172,24 @@ app.MapPut("/rol", ([FromQuery] int idRol, [FromBody] Rol rol) =>
     return Results.NoContent(); // Código 204
 })
 .WithTags("Rol");
+
+// DELETE - Borrar un rol especificando un id
+app.MapDelete("/rol", ([FromQuery] int idRol) =>
+{
+    var rolAEliminar = roles.FirstOrDefault(r => r.IdRol == idRol);
+    if (rolAEliminar != null)
+    {
+        roles.Remove(rolAEliminar);
+        return Results.NoContent(); // Código 204
+    }
+    else
+    {
+        return Results.NotFound(); // Código 404
+    }
+})
+.WithTags("Rol");
+
+
 
 
 
