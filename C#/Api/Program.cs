@@ -13,7 +13,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//aca arranca
 
 
 List<Rol> roles = new List<Rol>
@@ -30,73 +29,37 @@ List<Usuario> usuarios = new List<Usuario>
 
 List<UsuarioRol> usuariosRoles = new List<UsuarioRol>();
 
-// Lee listado de roles
-app.MapGet("/rol", () =>
-{
-    return Results.Ok(roles);
-})
-.WithTags("Rol");
 
-// Crea un nuevo rol en la lista
-app.MapPost("/rol", ([FromBody] Rol rol) =>
-{
-    if (string.IsNullOrEmpty(rol.Nombre))
-    {
-        return Results.BadRequest("El nombre del rol es requerido.");
-    }
 
-    rol.IdRol = roles.Count > 0 ? roles.Max(r => r.IdRol) + 1 : 1; // Genera un nuevo IdRol
-    rol.FechaCreacion = DateTime.Now; // Asigna la fecha de creación
-    roles.Add(rol);
-    return Results.Created($"/rol/{rol.IdRol}", rol); // Devuelve 201 Created con el rol creado
-})
-.WithTags("Rol");
-
-// Borra un rol en la lista
-app.MapDelete("/rol", ([FromQuery] int idRol) =>
-{
-    var rolAEliminar = roles.FirstOrDefault(rol => rol.IdRol == idRol);
-    if (rolAEliminar != null)
-    {
-        roles.Remove(rolAEliminar);
-        return Results.Ok(roles); // Código 200
-    }
-    else
-    {
-        return Results.NotFound(); // Código 404
-    }
-})
-.WithTags("Rol");
-
-// Actualiza un rol en la lista
-app.MapPut("/rol", ([FromQuery] int idRol, [FromBody] Rol rol) =>
-{
-    var rolAActualizar = roles.FirstOrDefault(rol => rol.IdRol == idRol);
-    if (rolAActualizar != null)
-    {
-        rolAActualizar.Nombre = rol.Nombre;
-        rolAActualizar.Habilitado = rol.Habilitado;
-        return Results.Ok(roles); // Código 200
-    }
-    else
-    {
-        return Results.NotFound(); // Código 404
-    }
-})
-.WithTags("Rol");
+//Usuarios
 
 // Lee listado de usuarios
-app.MapGet("/usuario", () =>
+app.MapGet("/usuario/{idUsuario}", (int idUsuario) =>
 {
-    return Results.Ok(usuarios);
+    var usuario = usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
+    if (usuario != null)
+    {
+        return Results.Ok(usuario);
+    }
+    else
+    {
+        return Results.NotFound();
+    }
 })
 .WithTags("Usuario");
 
 // Crea un nuevo usuario en la lista
 app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
 {
+    if (string.IsNullOrEmpty(usuario.Nombre) || string.IsNullOrEmpty(usuario.Email) ||
+        string.IsNullOrEmpty(usuario.NombreUsuario) || string.IsNullOrEmpty(usuario.Contraseña))
+    {
+        return Results.BadRequest("Faltan datos del usuario");
+    }
+
+    usuario.IdUsuario = usuarios.Count > 0 ? usuarios.Max(u => u.IdUsuario) + 1 : 1; // Asignar un nuevo ID
     usuarios.Add(usuario);
-    return Results.Ok(usuarios);
+    return Results.Created($"/usuario/{usuario.IdUsuario}", usuario);
 })
 .WithTags("Usuario");
 
@@ -119,57 +82,99 @@ app.MapDelete("/usuario", ([FromQuery] int idUsuario) =>
 // Actualiza un usuario en la lista
 app.MapPut("/usuario", ([FromQuery] int idUsuario, [FromBody] Usuario usuario) =>
 {
-    var usuarioAActualizar = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == idUsuario);
-    if (usuarioAActualizar != null)
+    var usuarioAActualizar = usuarios.FirstOrDefault(u => u.IdUsuario == idUsuario);
+    
+    if (usuarioAActualizar == null)
     {
-        usuarioAActualizar.Nombre = usuario.Nombre;
-        usuarioAActualizar.Email = usuario.Email;
-        usuarioAActualizar.NombreUsuario = usuario.NombreUsuario;
-        usuarioAActualizar.Contraseña = usuario.Contraseña;
-        usuarioAActualizar.Habilitado = usuario.Habilitado;
-        return Results.Ok(usuarios); // Código 200
+        return Results.NotFound(); // Código 404
+    }
+
+    if (!string.IsNullOrEmpty(usuario.Nombre) && usuario.Nombre != usuarioAActualizar.Nombre)
+    {
+        return Results.BadRequest("El nombre no se puede modificar"); // Código 400
+    }
+
+    usuarioAActualizar.Email = usuario.Email;
+    usuarioAActualizar.NombreUsuario = usuario.NombreUsuario;
+    usuarioAActualizar.Contraseña = usuario.Contraseña;
+    usuarioAActualizar.Habilitado = usuario.Habilitado;
+
+    return Results.NoContent(); // Código 204
+})
+.WithTags("Usuario");
+
+
+
+
+//Roles
+
+// Lee listado de roles
+app.MapGet("/rol/{idRol}", (int idRol) =>
+{
+    var rol = roles.FirstOrDefault(r => r.IdRol == idRol);
+    if (rol == null)
+    {
+        return Results.NotFound(); // Código 404
+    }
+    return Results.Ok(rol); // Código 200 con el rol encontrado
+})
+.WithTags("Rol");
+
+// Crea un nuevo rol en la lista
+app.MapPost("/rol", ([FromBody] Rol rol) =>
+{
+    if (string.IsNullOrEmpty(rol.Nombre))
+    {
+        return Results.BadRequest("El nombre del rol es requerido."); // Código 400
+    }
+
+    rol.IdRol = roles.Count > 0 ? roles.Max(r => r.IdRol) + 1 : 1; // Genera un nuevo IdRol
+    rol.FechaCreacion = DateTime.Now; // Asigna la fecha de creación
+    roles.Add(rol);
+    return Results.Created($"/rol/{rol.IdRol}", rol); // Devuelve 201 Created
+})
+.WithTags("Rol");
+
+// Borra un rol en la lista
+app.MapDelete("/rol", ([FromQuery] int idRol) =>
+{
+    var rolAEliminar = roles.FirstOrDefault(r => r.IdRol == idRol);
+    if (rolAEliminar != null)
+    {
+        roles.Remove(rolAEliminar);
+        return Results.NoContent(); // Código 204
     }
     else
     {
         return Results.NotFound(); // Código 404
     }
 })
-.WithTags("Usuario");
+.WithTags("Rol");
 
-// Asocia un usuario a un rol
-app.MapPost("/usuario/{idUsuario}/rol/{idRol}", (int idUsuario, int idRol) =>
+// Actualiza un rol en la lista
+app.MapPut("/rol", ([FromQuery] int idRol, [FromBody] Rol rol) =>
 {
-    var usuario = usuarios.FirstOrDefault(usuario => usuario.IdUsuario == idUsuario);
-    var rol = roles.FirstOrDefault(rol => rol.IdRol == idRol);
-
-    if (usuario != null && rol != null)
+    var rolAActualizar = roles.FirstOrDefault(r => r.IdRol == idRol);
+    
+    // Verificar si el rol existe
+    if (rolAActualizar == null)
     {
-        usuariosRoles.Add(new UsuarioRol { IdUsuarioRol = usuariosRoles.Count + 1, IdUsuario = idUsuario, IdRol = idRol });
-        return Results.Ok();
+        return Results.NotFound(); // Código 404
     }
 
-    return Results.NotFound();
-})
-.WithTags("UsuarioRol");
-
-// Desasigna un rol de un usuario
-app.MapDelete("/usuario/{idUsuario}/rol/{idRol}", (int idUsuario, int idRol) =>
-{
-    var usuarioRol = usuariosRoles.FirstOrDefault(ur => ur.IdUsuario == idUsuario && ur.IdRol == idRol);
-
-    if (usuarioRol != null)
+    // Verificar si se intenta modificar el nombre
+    if (!string.IsNullOrEmpty(rol.Nombre) && rol.Nombre != rolAActualizar.Nombre)
     {
-        usuariosRoles.Remove(usuarioRol);
-        return Results.Ok(); // Código 200
+        return Results.BadRequest("El nombre del rol no se puede modificar"); // Código 400
     }
 
-    return Results.NotFound(); // Código 404
+    // Actualizar los demás campos
+    rolAActualizar.Habilitado = rol.Habilitado;
+
+    return Results.NoContent(); // Código 204
 })
-.WithTags("UsuarioRol");
+.WithTags("Rol");
 
 
 
-
-//cambios hechoss
-//aca termina
 app.Run();
