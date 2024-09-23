@@ -7,4 +7,5 @@ public class Usuario
     public required string Contraseña { get; set; }
     public bool Habilitado { get; set; }
     public DateTime FechaCreacion { get; set; }
+    public List<Usuario> usuarios { get; set; } = new List<Usuario>();
 }
