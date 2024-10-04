@@ -87,5 +87,7 @@ public static class UsuarioEndpoints
             }
         })
         .WithTags("Usuario");
+
+        return app;
     }
 }

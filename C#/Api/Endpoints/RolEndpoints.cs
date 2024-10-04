@@ -87,5 +87,7 @@ public static class RolEndpoints
             }
         })
         .WithTags("Rol");
+
+        return app;
     }
 }
