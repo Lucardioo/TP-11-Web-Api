@@ -1,4 +1,5 @@
 using Api;
+using Api.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -2756,11 +2756,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/et12alumno/Descargas/lucas godoy no borrar/TP 11 Web Api/C#/Api/Api.csproj",
+      "projectUniqueName": "/mnt/Datos/Repos/TP-12-Web-Api/C#/Api/Api.csproj",
       "projectName": "Api",
-      "projectPath": "/home/et12alumno/Descargas/lucas godoy no borrar/TP 11 Web Api/C#/Api/Api.csproj",
+      "projectPath": "/mnt/Datos/Repos/TP-12-Web-Api/C#/Api/Api.csproj",
       "packagesPath": "/home/et12alumno/.nuget/packages/",
-      "outputPath": "/home/et12alumno/Descargas/lucas godoy no borrar/TP 11 Web Api/C#/Api/obj/",
+      "outputPath": "/mnt/Datos/Repos/TP-12-Web-Api/C#/Api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/et12alumno/.nuget/NuGet/NuGet.Config"

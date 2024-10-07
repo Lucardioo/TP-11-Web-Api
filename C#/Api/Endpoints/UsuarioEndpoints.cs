@@ -6,11 +6,11 @@ public static class UsuarioEndpoints
 {
     public static RouteGroupBuilder MapUsuarioEndpoints(this RouteGroupBuilder app)
     {
-        List<Usuario> usuarios = new List<Usuario>
-        {
+        List<Usuario> usuarios = [
+        
             new Usuario { IdUsuario = 1, Nombre = "Lucas", Email = "lucas@example.com", NombreUsuario = "lucas123", Contraseña = "pass123", Habilitado = true, FechaCreacion = DateTime.Now },
             new Usuario { IdUsuario = 2, Nombre = "Nahuel", Email = "nahuel@example.com", NombreUsuario = "nahuel123", Contraseña = "pass123", Habilitado = true, FechaCreacion = DateTime.Now }
-        };
+        ];
 
         // POST - Crea un nuevo usuario en la lista
         app.MapPost("/usuario", ([FromBody] Usuario usuario) =>

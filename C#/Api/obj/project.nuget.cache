@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DGRYpqrrO2numE88Nufu+H0hdGmpcxaGXxQD9eQepIGjC9p9OJSMG1afpEFWqGoMYjQ7wbJcCQGkpF0ivSSJcg==",
+  "dgSpecHash": "XxO+npBu6zPB4JhPYNlAWk5AkfHW0MyjgLJiz1nzp3mIdoOqY6YX15309tHmXMDm4iJIocbPzvIVcpoW5AJhEA==",
   "success": true,
-  "projectFilePath": "/home/et12alumno/Descargas/lucas godoy no borrar/TP 11 Web Api/C#/Api/Api.csproj",
+  "projectFilePath": "/mnt/Datos/Repos/TP-12-Web-Api/C#/Api/Api.csproj",
   "expectedPackageFiles": [
     "/home/et12alumno/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/et12alumno/.nuget/packages/microsoft.aspnetcore.openapi/8.0.8/microsoft.aspnetcore.openapi.8.0.8.nupkg.sha512",
