@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-
 namespace Api.Endpoints;
 
 public static class RolEndpoints

@@ -35,6 +35,5 @@ app.MapGroup("/api")
 app.MapGroup("/api")
     .MapRolEndpoints()
     .WithTags("Rol");
-    
 
 app.Run();
